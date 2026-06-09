@@ -1,17 +1,32 @@
 'use client'
-import { Button, Col, Divider, Form, Input, Row } from 'antd';
+import { Button, Col, Divider, Form, Input, notification, Row } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { redirect } from 'next/dist/server/api-utils';
 import { authenticate } from '@/utils/action';
+import { useRouter } from 'next/navigation';
 
 const Login = () => {
+    const router = useRouter();
 
     const onFinish = async (values: any) => {
-        const { email, password } = values;
+        const { username, password } = values;
         // trigger login
-        const response = await authenticate(email, password);
+        const response = await authenticate(username, password);
+        if (response?.error) {
+            notification.error({
+                message: "Error login",
+                description: response?.error
+            })
+            if (response?.code === 2) {
+                router.push('/verify');
+            }
+        } else { // Trường hợp thành công không trả về error
+            // redirect to /dashboard
+            router.push('/dashboard');
+        }
+
         console.log(">>> check response", response);
         // console.log("Check values: ", values);
         // const data = await signIn("credentials", { email, password, redirect: false });
@@ -36,7 +51,7 @@ const Login = () => {
                     >
                         <Form.Item
                             label="Email"
-                            name="email"
+                            name="username"
                             rules={[
                                 {
                                     required: true,
