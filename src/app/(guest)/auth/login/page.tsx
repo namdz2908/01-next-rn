@@ -1,6 +1,8 @@
 import Login from "@/components/auth/login";
+import { auth 
 
-const LoginPage = () => {
+} from "@/auth";
+const LoginPage = async () => {
     return (
         <Login />
     )
