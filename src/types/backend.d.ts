@@ -37,4 +37,29 @@ declare global {
         },
         access_token: string;
     }
+
+    interface IUser {
+        _id?: string;
+        email: string;
+        name: string;
+        age?: number;
+        address?: string;
+        createdAt?: string;
+        updatedAt?: string;
+    }
+
+    interface ICreateUserRequest {
+        email: string;
+        name: string;
+        password: string;
+        age?: number;
+        address?: string;
+    }
+
+    interface IUpdateUserRequest {
+        email?: string;
+        name?: string;
+        age?: number;
+        address?: string;
+    }
 }
