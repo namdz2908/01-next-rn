@@ -62,4 +62,48 @@ declare global {
         age?: number;
         address?: string;
     }
+
+    interface IRestaurant {
+      _id?: string;
+      name: string;
+      phone: string;
+      address: string;
+      email: string;
+      rating?: number;
+      hours?: string;
+      createdAt?: string;
+      updatedAt?: string;
+    }
+
+    interface IMenu {
+      _id?: string;
+      restaurant: string;
+      title: string;
+      description?: string;
+      image?: string;
+      createdAt?: string;
+      updatedAt?: string;
+    }
+
+    interface IMenuItem {
+      _id?: string;
+      menu: string;
+      category: string;
+      title: string;
+      description?: string;
+      basePrice: number;
+      image?: string;
+      enabled: boolean;
+      createdAt?: string;
+      updatedAt?: string;
+    }
+
+    interface IMenuCategory {
+      _id?: string;
+      menu: string;
+      name: string;
+      displayOrder: number;
+      createdAt?: string;
+      updatedAt?: string;
+    }
 }
