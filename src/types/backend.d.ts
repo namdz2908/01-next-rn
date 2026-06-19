@@ -64,46 +64,78 @@ declare global {
     }
 
     interface IRestaurant {
-      _id?: string;
-      name: string;
-      phone: string;
-      address: string;
-      email: string;
-      rating?: number;
-      hours?: string;
-      createdAt?: string;
-      updatedAt?: string;
+        _id?: string;
+        name: string;
+        phone: string;
+        address: string;
+        email: string;
+        rating?: number;
+        hours?: string; // JSON string
+        createdAt?: string;
+        updatedAt?: string;
     }
 
     interface IMenu {
-      _id?: string;
-      restaurant: string;
-      title: string;
-      description?: string;
-      image?: string;
-      createdAt?: string;
-      updatedAt?: string;
+        _id?: string;
+        restaurant: string | IRestaurant;
+        title: string;
+        description?: string;
+        image?: string;
+        createdAt?: string;
+        updatedAt?: string;
     }
 
     interface IMenuItem {
-      _id?: string;
-      menu: string;
-      category: string;
-      title: string;
-      description?: string;
-      basePrice: number;
-      image?: string;
-      enabled: boolean;
-      createdAt?: string;
-      updatedAt?: string;
+        _id?: string;
+        menu: string | IMenu;
+        category: string | IMenuCategory;
+        title: string;
+        description?: string;
+        basePrice: number;
+        image?: string;
+        enabled: boolean;
+        createdAt?: string;
+        updatedAt?: string;
     }
 
     interface IMenuCategory {
-      _id?: string;
-      menu: string;
-      name: string;
-      displayOrder: number;
-      createdAt?: string;
-      updatedAt?: string;
+        _id?: string;
+        menu: string | IMenu;
+        name: string;
+        displayOrder: number;
+        createdAt?: string;
+        updatedAt?: string;
+    }
+
+    interface ICreateRestaurantRequest {
+        name: string;
+        phone: string;
+        address: string;
+        email: string;
+        hours?: string;
+    }
+
+    interface ICreateMenuRequest {
+        restaurant: string;
+        title: string;
+        description?: string;
+        image?: string;
+    }
+
+    interface ICreateMenuItemRequest {
+        menu: string;
+        category: string;
+        title: string;
+        description?: string;
+        basePrice: number;
+        image?: string;
+        enabled?: boolean;
+    }
+
+    interface ICreateMenuCategoryRequest {
+        menu: string;
+        name: string;
+        displayOrder?: number;
     }
 }
+
