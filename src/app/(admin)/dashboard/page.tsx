@@ -1,12 +1,11 @@
 'use client'
 
-import AdminCard from "@/components/admin/admin.card";
+import DashboardAnalytics from "@/components/analytics/DashboardAnalytics";
 
 const DashboardPage = () => {
-
     return (
         <div>
-            <AdminCard />
+            <DashboardAnalytics />
         </div>
     )
 }
