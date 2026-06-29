@@ -4,12 +4,12 @@ import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Row, Col, Card, Button, Input, Space, Pagination, Tag, Drawer, InputNumber, message, Spin, Empty, Select, Radio } from 'antd'
 import { ShoppingCartOutlined, ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons'
-import { fetchRestaurants } from '@/app/actions/restaurant.action'
+import { fetchRestaurant } from '@/app/actions/restaurant.action'
 import { fetchMenuItems } from '@/app/actions/menu.action'
 
 interface MenuItem {
   _id: string
-  name: string
+  title: string
   description: string
   basePrice: number
   category: string
@@ -51,13 +51,12 @@ const MenuPage = () => {
     try {
       setLoading(true)
 
-      // Fetch restaurant
-      const restaurantRes = await fetchRestaurants(1, 100)
-      const foundRestaurant = restaurantRes?.data?.results?.find(
-        (r: any) => r._id === restaurantId
-      )
-      if (foundRestaurant) {
-        setRestaurant(foundRestaurant)
+      // Fetch đúng 1 nhà hàng theo ID thay vì fetch 100 rồi filter
+      if (restaurantId) {
+        const restaurantRes = await fetchRestaurant(restaurantId)
+        if (restaurantRes?.statusCode === 200 && restaurantRes?.data) {
+          setRestaurant(restaurantRes.data)
+        }
       }
 
       // Fetch menu items
@@ -81,7 +80,7 @@ const MenuPage = () => {
   }
 
   const filteredItems = menuItems.filter((item: any) => {
-    const matchesSearch = item.name?.toLowerCase().includes(searchText.toLowerCase())
+    const matchesSearch = item.title?.toLowerCase().includes(searchText.toLowerCase())
     const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter
     return matchesSearch && matchesCategory && item.enabled
   })
@@ -96,7 +95,7 @@ const MenuPage = () => {
       }
       return [...prevCart, { item, quantity: 1 }]
     })
-    message.success(`${item.name} added to cart!`)
+    message.success(`${item.title} added to cart!`)
   }
 
   const removeFromCart = (itemId: string) => {
@@ -260,7 +259,7 @@ const MenuPage = () => {
                     🍜
                   </div>
                   <h4 style={{ marginBottom: '4px', fontSize: '14px', fontWeight: '600' }}>
-                    {item.name}
+                    {item.title}
                   </h4>
                   <p style={{ color: '#666', fontSize: '12px', marginBottom: '8px', flex: 1 }}>
                     {item.description}
@@ -314,7 +313,7 @@ const MenuPage = () => {
               <Card key={cartItem.item._id} size="small">
                 <Row justify="space-between" align="middle">
                   <Col>
-                    <h4 style={{ margin: '0 0 4px 0' }}>{cartItem.item.name}</h4>
+                    <h4 style={{ margin: '0 0 4px 0' }}>{cartItem.item.title}</h4>
                     <p style={{ color: '#666', margin: 0, fontSize: '12px' }}>
                       ${cartItem.item.basePrice.toFixed(2)} each
                     </p>
