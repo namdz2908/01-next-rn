@@ -22,36 +22,54 @@ export const OrderNotifications = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
 
-  // Mock: In real app, this would come from WebSocket
+  // Thay WebSocket bằng polling API tạm thời
   useEffect(() => {
-    const handleNewOrder = (newOrder: any) => {
-      const notification: Notification = {
-        id: `notif-${Date.now()}`,
-        orderId: newOrder._id,
-        customerName: newOrder.user?.name || 'Unknown',
-        restaurantName: newOrder.restaurant?.name || 'Unknown',
-        items: newOrder.items?.length || 0,
-        totalPrice: newOrder.totalPrice,
-        orderType: newOrder.orderType || 'delivery',
-        timestamp: new Date(),
-        read: false,
+    let lastKnownOrderId = '';
+    
+    const checkForNewOrders = async () => {
+      try {
+        // dynamic import để tránh lỗi ở client component
+        const { fetchOrders } = await import('@/app/actions/order.action');
+        const res = await fetchOrders(1, 5);
+        if (res?.statusCode === 200 && res?.data?.results?.length > 0) {
+          const latestOrder = res.data.results[0];
+          
+          // Kiểm tra xem có phải đơn mới tinh không
+          if (lastKnownOrderId && latestOrder._id !== lastKnownOrderId) {
+            const notification: Notification = {
+              id: `notif-${Date.now()}`,
+              orderId: latestOrder._id,
+              customerName: latestOrder.user?.name || 'Unknown',
+              restaurantName: latestOrder.restaurant?.name || 'Unknown',
+              items: latestOrder.totalPrice > 0 ? 'Multiple' : '0', // Fallback if no item details
+              totalPrice: latestOrder.totalPrice,
+              orderType: latestOrder.orderType || 'delivery',
+              timestamp: new Date(latestOrder.orderTime || new Date()),
+              read: false,
+            };
+
+            setNotifications((prev) => [notification, ...prev]);
+            setUnreadCount((prev) => prev + 1);
+
+            // Play notification sound
+            const audio = new Audio('/notification.mp3');
+            audio.play().catch(() => {});
+          }
+          lastKnownOrderId = latestOrder._id;
+        }
+      } catch (error) {
+        console.error('Polling error:', error);
       }
+    };
 
-      setNotifications((prev) => [notification, ...prev])
-      setUnreadCount((prev) => prev + 1)
+    // Kiểm tra ngay lần đầu
+    checkForNewOrders();
 
-      // Play notification sound
-      const audio = new Audio('/notification.mp3')
-      audio.play().catch(() => {}) // Ignore if sound not available
-    }
+    // Poll mỗi 30s
+    const interval = setInterval(checkForNewOrders, 30000);
 
-    // Simulate receiving new orders (replace with WebSocket in production)
-    const interval = setInterval(() => {
-      // This would be replaced by actual WebSocket listener
-    }, 30000)
-
-    return () => clearInterval(interval)
-  }, [])
+    return () => clearInterval(interval);
+  }, []);
 
   const handleMarkAsRead = (id: string) => {
     setNotifications((prev) =>

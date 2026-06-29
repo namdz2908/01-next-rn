@@ -51,7 +51,7 @@ export async function fetchOrderStats() {
         }
 
         const response = await sendRequest<IBackendRes<any>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/orders/stats`,
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/orders/analytics/summary`,
             method: "GET",
             headers: {
                 Authorization: `Bearer ${session.access_token}`,
