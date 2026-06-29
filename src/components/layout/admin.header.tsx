@@ -8,6 +8,7 @@ import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
 import { useSession } from 'next-auth/react';
 import { signOut } from 'next-auth/react';
+import { OrderNotifications } from '@/components/admin/order-notifications';
 
 const AdminHeader = (props: any) => {
     // const {data: session, status} = useSession();
@@ -72,16 +73,19 @@ const AdminHeader = (props: any) => {
                         height: 64,
                     }}
                 />
-                <Dropdown menu={{ items }} >
-                    <a onClick={(e) => e.preventDefault()}
-                        style={{ color: "unset", lineHeight: "0 !important", marginRight: 20 }}
-                    >
-                        <Space>
-                            Welcome {session?.user?.name ?? ""}
-                            <DownOutlined />
-                        </Space>
-                    </a>
-                </Dropdown>
+                <Space style={{ marginRight: 20 }}>
+                    <OrderNotifications />
+                    <Dropdown menu={{ items }} >
+                        <a onClick={(e) => e.preventDefault()}
+                            style={{ color: "unset", lineHeight: "0 !important" }}
+                        >
+                            <Space>
+                                Welcome {session?.user?.name ?? ""}
+                                <DownOutlined />
+                            </Space>
+                        </a>
+                    </Dropdown>
+                </Space>
             </Header>
         </>
     )

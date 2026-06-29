@@ -167,6 +167,15 @@ const HomePage = () => {
                                     <Button 
                                         type="primary" 
                                         size="large" 
+                                        icon={<ShoppingOutlined />}
+                                        style={{ backgroundColor: '#52c41a', borderColor: '#52c41a' }}
+                                        onClick={() => router.push('/customer/order')}
+                                    >
+                                        Order Now
+                                    </Button>
+                                    <Button 
+                                        type="primary" 
+                                        size="large" 
                                         icon={<LoginOutlined />}
                                         style={{ backgroundColor: 'white', color: '#667eea', borderColor: 'white' }}
                                         onClick={() => router.push('/auth/login')}
@@ -351,36 +360,70 @@ const HomePage = () => {
             </div>
 
             {/* CTA Section */}
-            <Card 
-                style={{
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    borderRadius: '8px',
-                    border: 'none',
-                    color: 'white',
-                    padding: '40px',
-                    marginBottom: '40px',
-                    textAlign: 'center'
-                }}
-                bordered={false}
-            >
-                <Space direction="vertical" size="large" style={{ width: '100%' }}>
-                    <Title level={2} style={{ color: 'white', margin: 0 }}>Ready to Transform Your Business?</Title>
-                    <Paragraph style={{ color: 'rgba(255,255,255,0.9)', fontSize: '16px' }}>
-                        Start managing your orders, users, and analytics with our powerful admin dashboard.
-                    </Paragraph>
-                    <div>
-                        <Button 
-                            type="primary"
-                            size="large"
-                            icon={<ArrowRightOutlined />}
-                            style={{ backgroundColor: 'white', color: '#667eea', borderColor: 'white' }}
-                            onClick={() => router.push('/auth/register')}
-                        >
-                            Get Started Now
-                        </Button>
-                    </div>
-                </Space>
-            </Card>
+            <Row gutter={[16, 16]} style={{ marginBottom: '40px' }}>
+                <Col xs={24} md={12}>
+                    <Card 
+                        style={{
+                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            borderRadius: '8px',
+                            border: 'none',
+                            color: 'white',
+                            padding: '40px',
+                            textAlign: 'center'
+                        }}
+                        bordered={false}
+                    >
+                        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+                            <Title level={3} style={{ color: 'white', margin: 0 }}>🛍️ Start Ordering Food</Title>
+                            <Paragraph style={{ color: 'rgba(255,255,255,0.9)', fontSize: '14px' }}>
+                                Browse delicious meals from your favorite restaurants and get delivery in minutes
+                            </Paragraph>
+                            <div>
+                                <Button 
+                                    type="primary"
+                                    size="large"
+                                    icon={<ShoppingOutlined />}
+                                    style={{ backgroundColor: 'white', color: '#667eea', borderColor: 'white' }}
+                                    onClick={() => router.push('/customer/order')}
+                                >
+                                    Order Now
+                                </Button>
+                            </div>
+                        </Space>
+                    </Card>
+                </Col>
+                <Col xs={24} md={12}>
+                    <Card 
+                        style={{
+                            background: 'linear-gradient(135deg, #faad14 0%, #ff7a45 100%)',
+                            borderRadius: '8px',
+                            border: 'none',
+                            color: 'white',
+                            padding: '40px',
+                            textAlign: 'center'
+                        }}
+                        bordered={false}
+                    >
+                        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+                            <Title level={3} style={{ color: 'white', margin: 0 }}>📊 Admin Dashboard</Title>
+                            <Paragraph style={{ color: 'rgba(255,255,255,0.9)', fontSize: '14px' }}>
+                                Manage your business, track orders, and grow your restaurant with analytics
+                            </Paragraph>
+                            <div>
+                                <Button 
+                                    type="primary"
+                                    size="large"
+                                    icon={<ArrowRightOutlined />}
+                                    style={{ backgroundColor: 'white', color: '#faad14', borderColor: 'white' }}
+                                    onClick={() => router.push('/auth/login')}
+                                >
+                                    Get Started Now
+                                </Button>
+                            </div>
+                        </Space>
+                    </Card>
+                </Col>
+            </Row>
         </Content>
     )
 }
