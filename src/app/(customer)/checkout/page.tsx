@@ -9,7 +9,7 @@ import { createOrder } from '@/app/actions/order.action'
 interface CartItem {
   item: {
     _id: string
-    name: string
+    title: string
     basePrice: number
   }
   quantity: number
@@ -41,14 +41,18 @@ const CheckoutPage = () => {
     }
   }, [cartParam, router])
 
-  const totalPrice = cart.reduce((sum, ci) => sum + ci.item.basePrice * ci.quantity, 0)
+  const DELIVERY_FEE = orderType === 'delivery' ? 2 : 0
+  const TAX_RATE = 0.1
+  const subtotal = cart.reduce((sum, ci) => sum + ci.item.basePrice * ci.quantity, 0)
+  const totalPrice = subtotal
+  const finalTotalPrice = subtotal + DELIVERY_FEE + subtotal * TAX_RATE
   const totalItems = cart.reduce((sum, ci) => sum + ci.quantity, 0)
 
   const cartColumns = [
     {
       title: 'Item',
-      dataIndex: ['item', 'name'],
-      key: 'name',
+      dataIndex: ['item', 'title'],
+      key: 'title',
     },
     {
       title: 'Price',
@@ -82,7 +86,8 @@ const CheckoutPage = () => {
         })),
         orderType: orderType as 'delivery' | 'dine-in',
         paymentMethod,
-        totalPrice,
+        // Gửi tổng tiền thực tế (có phí ship + thuế) để khớp với UI
+        totalPrice: finalTotalPrice,
         ...(orderType === 'delivery' && {
           deliveryAddress: values.deliveryAddress,
           phone: values.phone,
@@ -402,30 +407,24 @@ const CheckoutPage = () => {
 
               <Row justify="space-between" style={{ fontSize: '14px' }}>
                 <span>Subtotal:</span>
-                <span>${totalPrice.toFixed(2)}</span>
+                <span>${subtotal.toFixed(2)}</span>
               </Row>
 
               <Row justify="space-between" style={{ fontSize: '14px' }}>
                 <span>Delivery Fee:</span>
-                <span>${orderType === 'delivery' ? '2.00' : '0.00'}</span>
+                <span>${DELIVERY_FEE.toFixed(2)}</span>
               </Row>
 
               <Row justify="space-between" style={{ fontSize: '14px' }}>
                 <span>Tax (10%):</span>
-                <span>${(totalPrice * 0.1).toFixed(2)}</span>
+                <span>${(subtotal * TAX_RATE).toFixed(2)}</span>
               </Row>
 
               <Divider />
 
               <Row justify="space-between" style={{ fontSize: '18px', fontWeight: 'bold', color: '#667eea' }}>
                 <span>Total:</span>
-                <span>
-                  ${(
-                    totalPrice +
-                    (orderType === 'delivery' ? 2 : 0) +
-                    totalPrice * 0.1
-                  ).toFixed(2)}
-                </span>
+                <span>${finalTotalPrice.toFixed(2)}</span>
               </Row>
 
               {currentStep === 2 && orderCreated && (
