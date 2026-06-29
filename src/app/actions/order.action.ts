@@ -68,3 +68,36 @@ export async function fetchOrderStats() {
         };
     }
 }
+
+export async function createOrder(orderData: any) {
+    try {
+        const session = await auth();
+        if (!session?.access_token) {
+            return {
+                statusCode: 401,
+                message: "Unauthorized",
+                data: null,
+                error: "No access token"
+            };
+        }
+
+        const response = await sendRequest<IBackendRes<any>>({
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/orders`,
+            method: "POST",
+            body: orderData,
+            headers: {
+                Authorization: `Bearer ${session.access_token}`,
+            },
+        });
+
+        return response;
+    } catch (error) {
+        return {
+            statusCode: 500,
+            message: "Failed to create order",
+            data: null,
+            error: (error as any)?.message || "Internal server error"
+        };
+    }
+}
+

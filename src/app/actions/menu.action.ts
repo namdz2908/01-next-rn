@@ -3,6 +3,47 @@
 import { auth } from "@/auth";
 import { sendRequest } from "@/utils/api";
 
+export async function fetchMenuItems(
+    current: number = 1,
+    pageSize: number = 10,
+    restaurantId?: string
+) {
+    try {
+        const session = await auth();
+        if (!session?.access_token) {
+            return {
+                statusCode: 401,
+                message: "Unauthorized",
+                data: null,
+                error: "No access token"
+            };
+        }
+
+        const queryParams: any = { current, pageSize };
+        if (restaurantId) {
+            queryParams.restaurantId = restaurantId;
+        }
+
+        const response = await sendRequest<IBackendRes<IModelPaginate<any>>>({
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/menu-items`,
+            method: "GET",
+            queryParams,
+            headers: {
+                Authorization: `Bearer ${session.access_token}`,
+            },
+        });
+
+        return response;
+    } catch (error) {
+        return {
+            statusCode: 500,
+            message: "Failed to fetch menu items",
+            data: null,
+            error: (error as any)?.message || "Internal server error"
+        };
+    }
+}
+
 export async function fetchMenus(
     current: number = 1,
     pageSize: number = 10,
