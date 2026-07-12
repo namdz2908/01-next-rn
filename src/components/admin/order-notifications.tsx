@@ -31,7 +31,7 @@ export const OrderNotifications = () => {
         // dynamic import để tránh lỗi ở client component
         const { fetchOrders } = await import('@/app/actions/order.action');
         const res = await fetchOrders(1, 5);
-        if (res?.statusCode === 200 && res?.data?.results?.length > 0) {
+        if (res?.statusCode === 200 && res?.data?.results && res.data.results.length > 0) {
           const latestOrder = res.data.results[0];
           
           // Kiểm tra xem có phải đơn mới tinh không

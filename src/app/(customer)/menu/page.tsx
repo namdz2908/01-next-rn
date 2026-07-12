@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Row, Col, Card, Button, Input, Space, Pagination, Tag, Drawer, InputNumber, message, Spin, Empty, Select, Radio } from 'antd'
 import { ShoppingCartOutlined, ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons'
@@ -60,7 +60,7 @@ const MenuPage = () => {
       }
 
       // Fetch menu items
-      const menuRes = await fetchMenuItems(current, pageSize, restaurantId)
+      const menuRes = await fetchMenuItems(current, pageSize, restaurantId || undefined)
       if (menuRes?.statusCode === 200 && menuRes?.data?.results) {
         setMenuItems(menuRes.data.results)
         setTotal(menuRes.data?.meta?.total || 0)
@@ -368,4 +368,10 @@ const MenuPage = () => {
   )
 }
 
-export default MenuPage
+export default function Page() {
+  return (
+    <Suspense fallback={<div style={{ padding: 40, textAlign: 'center' }}><Spin size="large" /></div>}>
+      <MenuPage />
+    </Suspense>
+  )
+}

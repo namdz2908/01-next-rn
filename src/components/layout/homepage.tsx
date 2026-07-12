@@ -103,30 +103,36 @@ const HomePage = () => {
                 
                 // Fetch restaurants
                 const restaurantsRes = await fetchRestaurants(1, 100)
-                if (restaurantsRes?.statusCode === 200 && restaurantsRes?.data?.results) {
-                    setRestaurants(restaurantsRes.data.results)
-                    if (restaurantsRes?.data?.meta?.total) {
+                if (restaurantsRes?.statusCode === 200 && restaurantsRes?.data) {
+                    const rData = restaurantsRes.data;
+                    if (rData.results) {
+                        setRestaurants(rData.results)
+                    }
+                    if (rData.meta?.total) {
                         setStats(prev => ({
                             ...prev,
-                            totalRestaurants: restaurantsRes.data.meta.total
+                            totalRestaurants: rData.meta.total
                         }))
                     }
                 }
 
                 // Fetch orders
                 const ordersRes = await fetchOrders(1, 4)
-                if (ordersRes?.statusCode === 200 && ordersRes?.data?.results) {
-                    setOrders(ordersRes.data.results)
-                    
-                    // Calculate stats from orders
-                    const totalRevenue = ordersRes.data.results.reduce((sum: number, order: any) => sum + (order.totalPrice || 0), 0)
-                    const totalOrders = ordersRes.data?.meta?.total || ordersRes.data.results.length
-                    
-                    setStats(prev => ({
-                        ...prev,
-                        totalRevenue: totalRevenue,
-                        totalOrders: totalOrders
-                    }))
+                if (ordersRes?.statusCode === 200 && ordersRes?.data) {
+                    const oData = ordersRes.data;
+                    if (oData.results) {
+                        setOrders(oData.results)
+                        
+                        // Calculate stats from orders
+                        const totalRevenue = oData.results.reduce((sum: number, order: any) => sum + (order.totalPrice || 0), 0)
+                        const totalOrders = oData.meta?.total || oData.results.length
+                        
+                        setStats(prev => ({
+                            ...prev,
+                            totalRevenue: totalRevenue,
+                            totalOrders: totalOrders
+                        }))
+                    }
                 }
                 
             } catch (error) {

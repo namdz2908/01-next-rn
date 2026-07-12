@@ -1,6 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 import { Card, Row, Col, Button, Space, Statistic, Timeline, Empty } from 'antd'
 import { CheckCircleOutlined, HomeOutlined, ShoppingOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/navigation'
@@ -108,4 +109,10 @@ const OrderSuccessPage = () => {
   )
 }
 
-export default OrderSuccessPage
+export default function Page() {
+  return (
+    <Suspense fallback={<div style={{ padding: 40, textAlign: 'center' }}>Loading...</div>}>
+      <OrderSuccessPage />
+    </Suspense>
+  )
+}

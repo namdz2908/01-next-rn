@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, Row, Col, Button, Input, Form, message, Spin, Radio, Space, Divider, Table, Empty, Steps } from 'antd'
 import { ArrowLeftOutlined, CheckCircleOutlined, Loading3QuartersOutlined } from '@ant-design/icons'
@@ -134,7 +134,7 @@ const CheckoutPage = () => {
     )
   }
 
-  const stepsConfig = [
+  const stepsConfig: { title: string; status: 'wait' | 'process' | 'finish' | 'error' }[] = [
     { title: 'Review Order', status: currentStep > 0 ? 'finish' : 'process' },
     { title: 'Delivery Info', status: currentStep > 1 ? 'finish' : currentStep === 1 ? 'process' : 'wait' },
     { title: 'Confirmation', status: currentStep > 2 ? 'finish' : currentStep === 2 ? 'process' : 'wait' },
@@ -446,4 +446,10 @@ const CheckoutPage = () => {
   )
 }
 
-export default CheckoutPage
+export default function Page() {
+  return (
+    <Suspense fallback={<div style={{ padding: 40, textAlign: 'center' }}><Spin size="large" /></div>}>
+      <CheckoutPage />
+    </Suspense>
+  )
+}
