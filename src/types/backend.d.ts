@@ -26,7 +26,8 @@ declare global {
             pages: number;
             total: number;
         },
-        result: T[]
+        result: T[];
+        results?: T[];
     }
 
     interface ILogin {
@@ -137,5 +138,37 @@ declare global {
         name: string;
         displayOrder?: number;
     }
+
+    interface IFeedback {
+        _id?: string;
+        name: string;
+        email: string;
+        phone?: string;
+        type: 'suggestion' | 'complaint' | 'question' | 'other';
+        subject: string;
+        message: string;
+        status: 'pending' | 'read' | 'replied';
+        adminReply?: string;
+        repliedAt?: string;
+        createdAt?: string;
+        updatedAt?: string;
+    }
+
+    interface ICreateFeedbackRequest {
+        name: string;
+        email: string;
+        phone?: string;
+        type: string;
+        subject: string;
+        message: string;
+    }
+
+    interface IFeedbackStats {
+        total: number;
+        pending: number;
+        read: number;
+        replied: number;
+    }
 }
+
 

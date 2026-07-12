@@ -6,6 +6,7 @@ import {
     ShopOutlined,
     TeamOutlined,
     UnorderedListOutlined,
+    MessageOutlined,
 } from '@ant-design/icons';
 import React, { useContext } from 'react';
 import { AdminContext } from "@/library/admin.context";
@@ -43,6 +44,11 @@ const AdminSideBar = () => {
                     key: 'menu',
                     label: <Link href="/dashboard/menu">Menus</Link>,
                     icon: <UnorderedListOutlined />,
+                },
+                {
+                    key: 'feedback',
+                    label: <Link href="/dashboard/feedback">Feedbacks</Link>,
+                    icon: <MessageOutlined />,
                 },
             ],
         },
